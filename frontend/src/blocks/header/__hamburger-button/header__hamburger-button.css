@@ -1,0 +1,19 @@
+.header__hamburger-button {
+  background-image: url('../images/header__hamburger-button.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  visibility: hidden;
+  margin-right: 27px;
+  padding: 0;
+}
+
+@media screen and (max-width: 550px){
+  .header__hamburger-button {
+    visibility: visible;
+  }
+}
