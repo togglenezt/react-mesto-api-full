@@ -1,7 +1,0 @@
-.auth__button_active {
-  opacity: 1;
-}
-
-.auth__button_active:hover {
-  opacity: .8;
-}
