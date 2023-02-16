@@ -102,7 +102,6 @@ const api = new Api({
   headers: {
     authorization: `Bearer ${localStorage.getItem('jwt')}`,
     'Content-Type': 'application/json',
-    'Cache-Control': 'max-age=0, no-cache, no-store, must-revalidate'
   }
 });
 
