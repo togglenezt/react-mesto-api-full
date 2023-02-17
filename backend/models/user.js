@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
+// const isUrl = require('validator/lib/isURL');
+// const isEmail = require('validator/lib/isEmail');
 const AuthErr = require('../errors/AuthErr');
 
 const userSchema = new mongoose.Schema({
@@ -40,7 +42,8 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function findOne(email, password) {
+// eslint-disable-next-line func-names
+userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
@@ -55,5 +58,5 @@ userSchema.statics.findUserByCredentials = function findOne(email, password) {
         });
     });
 };
-
+// models/user.js
 module.exports = mongoose.model('user', userSchema);
