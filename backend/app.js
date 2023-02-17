@@ -13,7 +13,7 @@ const corsErr = require('./middlewares/cors');
 
 const app = express();
 
-app.use('*', cors(corsErr));
+app.use(corsErr);
 app.use(bodyParser.json());
 const { validationCreateUser, validationLogin } = require('./middlewares/validation');
 
