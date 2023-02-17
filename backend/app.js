@@ -13,7 +13,7 @@ const corsErr = require('./middlewares/cors');
 
 const app = express();
 
-app.use(cors());
+app.use('*', cors(corsErr));
 app.use(bodyParser.json());
 const { validationCreateUser, validationLogin } = require('./middlewares/validation');
 
@@ -54,7 +54,6 @@ async function connect() {
   }
 }
 
-app.use(corsErr);
 app.use(errorLogger);
 
 app.use(errors());
