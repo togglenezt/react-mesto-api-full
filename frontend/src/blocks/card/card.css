@@ -1,0 +1,30 @@
+.card {
+  border-radius: 10px;
+  width: 282px;
+  color: black;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  flex-grow: inherit;
+  margin: 0;
+  position: relative;
+}
+
+@media screen and (max-width: 960px) {
+  .card {
+    border-radius: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .card {
+    width: calc(282px*1.5);
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .card {
+    border-radius: 10px;
+    width: 282px;
+  }
+}

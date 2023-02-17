@@ -1,0 +1,15 @@
+.popup__caption {
+  color: black;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  margin: 34px 0 54px 36px;
+}
+
+@media screen and (max-width: 550px) {
+  .popup__caption {
+    font-size: 18px;
+    line-height: 22px;
+    margin: 25px 0 75px 22px;
+  }
+}

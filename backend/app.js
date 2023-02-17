@@ -1,25 +1,34 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
 const express = require('express');
-const { errors, Joi, celebrate } = require('celebrate');
-const { createUser, login } = require('./controllers/users');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
+const router = require('./routes');
 const auth = require('./middlewares/auth');
-const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const userRouter = require('./routes/users');
-const cardRouter = require('./routes/cards');
-const INTERNAL_SERVER_ERROR = require('./errors/statusCode');
-const NotFound = require('./errors/notFound');
+const corsErr = require('./middlewares/cors');
 
 const app = express();
 
-const { PORT = 3000 } = process.env;
+app.use('*', cors(corsErr));
+app.use(bodyParser.json());
+const { validationCreateUser, validationLogin } = require('./middlewares/validation');
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+const { PORT, MONGO_URL } = process.env;
+const { createUsers, login } = require('./controllers/auth');
 
-app.use(express.json());
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
-app.use(cors);
+app.use(limiter);
+app.use(helmet());
 
 app.use(requestLogger);
 
@@ -28,47 +37,34 @@ app.get('/crash-test', () => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email({ tlds: { allow: false } }),
-    password: Joi.string().required(),
-  }),
-}), login);
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/),
-    email: Joi.string().required().email({ tlds: { allow: false } }),
-    password: Joi.string().required(),
-  }),
-}), createUser);
-
-// авторизация
+app.post('/signin', validationLogin, login);
+app.post('/signup', validationCreateUser, createUsers);
 app.use(auth);
+app.use(router);
 
-app.use('/', userRouter);
-app.use('/', cardRouter);
-app.use('*', (req, res, next) => {
-  next(new NotFound('Страница не найдена'));
-});
+async function connect() {
+  try {
+    await mongoose.set('strictQuery', false);
+    await mongoose.connect(MONGO_URL);
+    console.log(`App connected ${MONGO_URL}`);
+    await app.listen(PORT);
+    console.log(`App listening on port ${PORT}`);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 app.use(errorLogger);
 
 app.use(errors());
-
 app.use((err, req, res, next) => {
-  if (err.statusCode) {
-    res.status(err.statusCode).send({ message: err.message });
-  } else {
-    res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
-  }
+  const { statusCode = 500, message } = err;
+  res.status(statusCode).send({
+    message: statusCode === 500
+      ? 'На сервере произошла ошибка'
+      : message,
+  });
   next();
 });
 
-app.listen(PORT);
-
-// app.listen(PORT, () => {
-//   console.log(`App listening on port ${PORT}`);
-// });
+connect();

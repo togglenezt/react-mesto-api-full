@@ -1,0 +1,25 @@
+.card__name {
+  margin: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 190px;
+}
+
+@media screen and (max-width: 960px) {
+  .card__name {
+    width: 240px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .card__name {
+    width: 300px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .card__name {
+    width: 190px;
+  }
+}

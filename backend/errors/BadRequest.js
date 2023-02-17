@@ -1,10 +1,7 @@
-const { BAD_REQUEST_CODE } = require('./statusCode');
-
 class BadRequest extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = BAD_REQUEST_CODE;
+    this.statusCode = 400;
   }
 }
-
 module.exports = BadRequest;
