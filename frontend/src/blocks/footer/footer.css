@@ -1,19 +1,8 @@
 .footer {
-  margin: 67px 0 0;
-  padding-bottom: 60px;
+  padding: 0;
 }
-
-
-@media screen and (max-width:768px){
+@media (max-width: 425px) {
   .footer {
-    width: calc(282px*1.5);
-    margin: 48px auto 0;
-    padding-bottom: 36px;
-  }
-}
-
-@media screen and (max-width:550px){
-  .footer {
-    width: 282px;
+    padding: 0 19px;
   }
 }

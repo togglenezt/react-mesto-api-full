@@ -1,18 +1,36 @@
-import React from 'react';
-
-function PopupWithForm(props) {
-
+import React from "react";
+import closeIcon from "../images/CloseIcon.svg";
+function PopupWithForm({
+  name,
+  isOpen,
+  title,
+  form,
+  onSubmit,
+  buttonText,
+  onClose,
+  children,
+}) {
   return (
-    <article className={`popup popup_type_${props.name} ${props.isOpen ? 'popup_opened' : ''}`}>
-      <form action="#" className="form popup__container" name={props.name} onSubmit={props.onSubmit} noValidate>
-        <button className="popup__close" type="button" onClick={props.onClose}></button>
-        <h2 className="popup__caption">{props.title}</h2>
-        {props.children}
-        <button disabled={props.isDisabled} className={!props.isDisabled ? "popup__submit popup__submit_active" : "popup__submit"} type="submit">{props.buttonText}</button>
-      </form>
-    </article>
-  )
-
+    <div className={`popup popup_${name} ${isOpen ? `popup_opened` : ""}`}>
+      <div className="popup__container">
+        <h2 className="popup__text">{title}</h2>
+        <form className={`popup__form popup__${form}`} onSubmit={onSubmit}>
+          <fieldset className="popup__fieldset">
+            {children}
+            <button type="submit" className="popup__button">
+              {buttonText}
+            </button>
+          </fieldset>
+        </form>
+        <button type="button" className="popup__close" onClick={onClose}>
+          <img
+            src={closeIcon}
+            alt="закрывающий крестик"
+            className="popup__close-image"
+          />
+        </button>
+      </div>
+    </div>
+  );
 }
-
 export default PopupWithForm;

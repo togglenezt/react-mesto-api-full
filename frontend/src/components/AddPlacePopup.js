@@ -1,69 +1,68 @@
-import React from 'react';
-import useFormValidator from '../hooks/useFormValidator';
-import PopupWithForm from './PopupWithForm';
+import React from "react";
+import PopupWithForm from "./PopupWithForm";
 
-
-export default function AddPlacePopup(props) {
-
-  const {
-    values,
-    errors,
-    isElementValid,
-    handleElementChange,
-    resetFormInputs
-  } = useFormValidator({});
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    props.onAddPlace(values)
+function AddPlacePopup({ onSubmit, isOpen, onClose, isLoading }) {
+  const [name, setName] = React.useState("");
+  const [link, setLink] = React.useState("");
+  // input change
+  function handleNameChange(e) {
+    setName(e.target.value);
   }
-
+  // input change
+  function handleLinkChange(e) {
+    setLink(e.target.value);
+  }
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    onSubmit({
+      name: name,
+      link: link,
+    });
+  }
+  // clean inputs
   React.useEffect(() => {
-    resetFormInputs();
-  }, [resetFormInputs, props.isOpen]);
-
+    if (isOpen) {
+      setName("");
+      setLink("");
+    }
+  }, [isOpen]);
   return (
     <PopupWithForm
-      name="add"
-      title="Новое место"
-      buttonText="Сохранить"
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      isOpen={isOpen}
+      onClose={onClose}
+      title={"Новое место"}
+      buttonText={isLoading ? "Сохранение..." : "Создать"}
+      name={"cards"}
+      form={"cards-form"}
       onSubmit={handleSubmit}
-      isDisabled={!isElementValid}
     >
       <input
+        className="popup__input popup__input_type_image"
         type="text"
-        placeholder="Название"
-        className={errors.name ? "popup__text popup__text_type_error" : "popup__text"}
-        name="name"
+        name="image"
         id="image-input"
-        required
+        autoComplete="off"
+        placeholder="Название"
         minLength="2"
         maxLength="30"
-        value={values.name || ""}
-        onChange={handleElementChange}
-      />
-
-      <span className={errors.name ? "popup__text-error popup__text-error_visible" : "popup__text-error"}>
-        {errors.name}
-      </span>
-
-      <input
-        type="url"
-        placeholder="Ссылка на картинку"
-        className={errors.link ? "popup__text popup__text_type_error" : "popup__text"}
-        id="link-input"
-        name="link"
         required
-        value={values.link || ""}
-        onChange={handleElementChange}
+        onChange={handleNameChange}
+        value={name}
       />
-
-      <span className={errors.link ? "popup__text-error popup__text-error_visible" : "popup__text-error"}>
-        {errors.link}
-      </span>
+      <span className="popup__error image-input-error"></span>
+      <input
+        className="popup__input popup__input_type_link"
+        type="url"
+        name="link"
+        id="link-input"
+        autoComplete="off"
+        placeholder="Ссылка на картинку"
+        required
+        onChange={handleLinkChange}
+        value={link}
+      />
+      <span className="popup__error link-input-error"></span>
     </PopupWithForm>
-  )
+  );
 }
+export default AddPlacePopup;

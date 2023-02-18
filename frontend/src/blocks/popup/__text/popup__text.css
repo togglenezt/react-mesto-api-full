@@ -1,18 +1,17 @@
 .popup__text {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 14px;
-  padding: 0 0 13px 0;
-  width: 354px;
-  outline: none;
-  border: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  margin: 0;
-  align-self: center;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 1.1;
+  text-align: center;
+  color: black;
+  margin: 0 64px 54px 36px;
+  padding: 0;
+  max-width: 330px;
 }
-
-@media screen and (max-width: 550px) {
+@media (max-width: 650px) {
   .popup__text {
-    width: 238px;
+    font-size: 18px;
+    max-width: 238px;
+    margin: 0 22px 75px 22px;
   }
 }

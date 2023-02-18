@@ -1,16 +1,15 @@
-const BadRequest = require('../errors/BadRequest');
-const NotFound = require('../errors/NotFound');
+const BadRequest = require('../errors/BadRequest'); // 400
+const NotFound = require('../errors/NotFound'); // 404
 const userSchema = require('../models/user');
 
-// Поиск пользователей
+// ищем всех пользователей
 module.exports.getUsers = (req, res, next) => {
   userSchema
     .find({})
     .then((users) => res.send(users))
     .catch(next);
 };
-
-// Поиск по id
+// ищем по ID
 module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
   userSchema.findById(userId)
@@ -18,7 +17,7 @@ module.exports.getUserById = (req, res, next) => {
       if (!user) {
         throw new NotFound('Пользователь не найден');
       }
-      res.send({ data: user });
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -28,7 +27,6 @@ module.exports.getUserById = (req, res, next) => {
       next(err);
     });
 };
-
 // обновить данные
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
@@ -50,8 +48,7 @@ module.exports.updateUser = (req, res, next) => {
       } else next(err);
     });
 };
-
-// обновить аватар
+// обновление аватара
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   userSchema
@@ -67,7 +64,6 @@ module.exports.updateAvatar = (req, res, next) => {
       } else next(err);
     });
 };
-
 // текущий пользователь
 module.exports.getCurrentUser = (req, res, next) => {
   userSchema.findById(req.user._id)

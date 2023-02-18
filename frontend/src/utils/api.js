@@ -1,108 +1,109 @@
-import { serverUrl } from './utils';
-
-
+// import React from "react";
 class Api {
-  constructor(options) {
-    this.baseUrl = options.baseUrl;
-    this.headers = options.headers;
+  constructor(config) {
+    this._url = config.url;
+    this._headers = config.headers;
   }
-
-  //метод получения ответа от сервера
-  _getServerResponse(res) {
+  // проверяет есть ли ошибка
+  _checkError(res) {
     if (res.ok) {
       return res.json();
     }
-    return Promise.reject(`Не удалось получить ответ от сервера. Ошибка ${res.status}`);
+    return Promise.reject(`Статус ошибки: ${res.status}`);
   }
-
-  getUserInfo() {
-    return fetch(`${this.baseUrl}/users/me`, {
-      headers: this.headers
-    })
-      .then(this._getServerResponse);
+  // Загрузка карточек с сервера
+  getInitialCards() {
+    const token = localStorage.getItem("jwt");
+    return fetch(`${this._url}/cards`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    }).then((res) => this._checkError(res));
   }
-
-  setUserInfo(item) {
-    return fetch(`${this.baseUrl}/users/me`, {
-      method: 'PATCH',
-      headers: this.headers,
-      body: JSON.stringify({
-        name: item.name,
-        about: item.about
-      })
-    })
-      .then(this._getServerResponse);
+  // добавление карточек на страницу
+  postNewCard(data) {
+    const token = localStorage.getItem("jwt");
+    return fetch(`${this._url}/cards`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    }).then((res) => this._checkError(res));
   }
-
-  getCards() {
-    return fetch(`${this.baseUrl}/cards`, {
-      headers: this.headers
-    })
-      .then(this._getServerResponse);
+  // удаление карточек
+  deleteCard(cardId) {
+    const token = localStorage.getItem("jwt");
+    return fetch(`${this._url}/cards/${cardId}`, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    }).then((res) => this._checkError(res));
   }
-
-  addCard(newCard) {
-    return fetch(`${this.baseUrl}/cards`, {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({
-        name: newCard.name,
-        link: newCard.link
-      })
-    })
-      .then(this._getServerResponse);
+  // получение данных с сервера
+  getInfo() {
+    const token = localStorage.getItem("jwt");
+    return fetch(`${this._url}/users/me`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    }).then((res) => this._checkError(res));
   }
-
-  deleteCard(id) {
-    return fetch(`${this.baseUrl}/cards/${id}`, {
-      method: 'DELETE',
-      headers: this.headers
-    })
-      .then(this._getServerResponse);
+  // изменение данных с сервера
+  patchUserInfo(data) {
+    const token = localStorage.getItem("jwt");
+    return fetch(`${this._url}/users/me`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    }).then((res) => this._checkError(res));
   }
-
-  like(id) {
-    return fetch(`${this.baseUrl}/cards/likes/${id}`, {
-      method: 'PUT',
-      headers: this.headers
-    })
-      .then(this._getServerResponse);
+  // изменение данных аватара
+  patchAvatarInfo(data) {
+    const token = localStorage.getItem("jwt");
+    return fetch(`${this._url}/users/me/avatar`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    }).then((res) => this._checkError(res));
   }
-
-  dislike(id) {
-    return fetch(`${this.baseUrl}/cards/likes/${id}`, {
-      method: 'DELETE',
-      headers: this.headers
-    })
-      .then(this._getServerResponse);
+  // добавление лайка
+  getLike(cardId) {
+    const token = localStorage.getItem("jwt");
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    }).then((res) => this._checkError(res));
   }
-
-  changeLikeCardStatus(isLiked, id) {
-    if(isLiked) {
-      return this.dislike(id);
-    } else {
-      return this.like(id);
-    }
-  }
-
-  setAvatar(data) {
-    return fetch(`${this.baseUrl}/users/me/avatar`, {
-      method: 'PATCH',
-      headers: this.headers,
-      body: JSON.stringify({
-        avatar: data.avatar,
-      })
-    })
-      .then(this._getServerResponse);
+  // удаление лайка
+  deleteLike(cardId) {
+    const token = localStorage.getItem("jwt");
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    }).then((res) => this._checkError(res));
   }
 }
-
 const api = new Api({
-  baseUrl: serverUrl,
-  headers: {
-    authorization: `Bearer ${localStorage.getItem('jwt')}`,
-    'Content-Type': 'application/json',
-  }
+   url: "https://api.mesto-api.nomoredomains.work"
 });
-
 export default api;
