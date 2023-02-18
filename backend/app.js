@@ -14,6 +14,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 const app = express();
+app.use(cors); // cors
 app.use(bodyParser.json());
 const { validationCreateUser, validationLogin } = require('./middlewares/validation');
 
@@ -38,7 +39,6 @@ app.use(router);
 app.use(helmet());
 app.use(limiter);
 app.use(errorLogger); // errors
-app.use(cors); // cors
 async function connect() {
   try {
     await mongoose.set('strictQuery', false);
