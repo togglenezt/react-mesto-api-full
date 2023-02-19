@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-//const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
@@ -13,8 +12,9 @@ const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
+
 const app = express();
-app.use(cors); // cors
+app.use(cors);
 app.use(bodyParser.json());
 const { validationCreateUser, validationLogin } = require('./middlewares/validation');
 
@@ -26,7 +26,7 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-app.use(requestLogger); // request
+app.use(requestLogger);
 app.post('/signin', validationLogin, login);
 app.post('/signup', validationCreateUser, createUsers);
 app.use(auth);
@@ -38,7 +38,8 @@ app.get('/crash-test', () => {
 app.use(router);
 app.use(helmet());
 app.use(limiter);
-app.use(errorLogger); // errors
+app.use(errorLogger);
+
 async function connect() {
   try {
     await mongoose.set('strictQuery', false);
@@ -52,6 +53,7 @@ async function connect() {
     console.log(err);
   }
 }
+
 app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
@@ -62,5 +64,5 @@ app.use((err, req, res, next) => {
   });
   next();
 });
-// подключаем роуты
+
 connect();

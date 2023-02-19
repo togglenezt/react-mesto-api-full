@@ -1,4 +1,4 @@
-// import React from "react";
+
 class Api {
   constructor(config) {
     this._url = config.url;
@@ -102,8 +102,18 @@ class Api {
       },
     }).then((res) => this._checkError(res));
   }
+/*---------------------*/
+
+changeLikeCardStatus(isLiked, cardId) {
+  if(isLiked) {
+    return this.deleteLike(cardId);
+  } else {
+    return this.getLike(cardId);
+  }
+}
+
 }
 const api = new Api({
-   url: "https://api.mesto-api.nomoredomains.work"
+   url: "http://api.mesto-api.nomoredomains.work"
 });
 export default api;

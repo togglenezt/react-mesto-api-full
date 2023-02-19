@@ -42,5 +42,5 @@ class AuthApi {
     }).then((res) => this._checkError(res));
   }
 }
-const authApi = new AuthApi("https://api.mesto-api.nomoredomains.work");
+const authApi = new AuthApi("http://api.mesto-api.nomoredomains.work");
 export default authApi;
