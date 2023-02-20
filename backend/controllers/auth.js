@@ -4,7 +4,7 @@ const userSchema = require('../models/user');
 const BadRequest = require('../errors/BadRequest'); // 400
 const ConflictError = require('../errors/ConflictError'); // 409
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 // создаем пользователя
 module.exports.createUsers = (req, res, next) => {
