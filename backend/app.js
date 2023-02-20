@@ -27,14 +27,16 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 app.use(requestLogger);
-app.post('/signin', validationLogin, login);
-app.post('/signup', validationCreateUser, createUsers);
-app.use(auth);
+
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
+app.post('/signin', validationLogin, login);
+app.post('/signup', validationCreateUser, createUsers);
+app.use(auth);
+
 app.use(router);
 app.use(helmet());
 app.use(limiter);
