@@ -42,7 +42,7 @@ module.exports.login = (req, res, next) => {
   return userSchema
     .findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', {
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret', {
         expiresIn: '7d',
       });
       res.status(200).send({ token });
