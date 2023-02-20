@@ -4,7 +4,7 @@ const userSchema = require('../models/user');
 const BadRequest = require('../errors/BadRequest'); // 400
 const ConflictError = require('../errors/ConflictError'); // 409
 
-// const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 // создаем пользователя
 module.exports.createUsers = (req, res, next) => {
@@ -42,7 +42,7 @@ module.exports.login = (req, res, next) => {
   return userSchema
     .findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'JWT_SECRET', {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: '7d',
       });
       res.status(200).send({ token });

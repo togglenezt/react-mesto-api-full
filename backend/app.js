@@ -7,11 +7,10 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const router = require('./routes');
 const auth = require('./middlewares/auth');
-const { MONGO_URL } = require('./config');
 const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGO_URL } = process.env;
 
 const app = express();
 app.use(cors);
